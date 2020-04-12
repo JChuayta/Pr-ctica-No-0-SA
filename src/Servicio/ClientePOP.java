@@ -10,9 +10,9 @@ public class ClientePOP {
     private static int UNILINE = 0;
     private static int BILINE = 1;
     private static int MULTILINE = 2;
-    private static String Servidor = "localhost";
-    private static String Usuario = "postgres";
-    private static String Contraseña = "tecnoweb";
+    private static String Servidor = "181.115.221.59";  /// IP DEL SERVIDOR DEL INGENIERO mail.ficct.uagrm.edu.bo
+    private static String Usuario = "grupo09sa";   // no interesa el grupo de prueba en realidad se colocaa cualquiera
+    private static String Contraseña = "grupo09grupo09"; /// lo mismo q arriba
     private int Puerto = 110;
 
     ///////en esta parte atrapa el asunto del mensaje... el error ocurre porque atrapa el mensaje y ve un salto de lineaa
