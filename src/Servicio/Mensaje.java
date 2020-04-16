@@ -86,7 +86,7 @@ public class Mensaje {
 
     @Override
     public String toString() {
-        return "Mensaje{" + "id=" + id + ", correo=" + correo + ", subject=" + subject + ", data=" + data + ", comandos=" + comandos + '}';
+        return data ;
     }
 
 }

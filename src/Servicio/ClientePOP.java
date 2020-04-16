@@ -4,18 +4,66 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.TimeoutException;
 
-/// esta clase es el encargado de leer el mensaje del correo electronico
-public class ClientePOP {
+ public class ClientePOP {
 
     private static int UNILINE = 0;
     private static int BILINE = 1;
     private static int MULTILINE = 2;
-    private static String Servidor = "181.115.221.59";  /// IP DEL SERVIDOR DEL INGENIERO mail.ficct.uagrm.edu.bo
-    private static String Usuario = "grupo09sa";   // no interesa el grupo de prueba en realidad se colocaa cualquiera
-    private static String Contraseña = "grupo09grupo09"; /// lo mismo q arriba
+    private static String Servidor = "virtual.fcet.uagrm.edu.bo";
+    private static String Usuario = "grupo08sc";
+    private static String Contraseña = "grupo08grupo08";
     private int Puerto = 110;
 
-    ///////en esta parte atrapa el asunto del mensaje... el error ocurre porque atrapa el mensaje y ve un salto de lineaa
+    public Mensaje LeerCorreo() {
+        Mensaje msj = null;
+        try {
+            String comando = "";
+            Socket socket = new Socket(Servidor, Puerto);
+            BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+            String respuesta = "";
+            if (socket != null && entrada != null && salida != null) {
+                comando = "USER " + Usuario + "\r\n";
+                respuesta = ejecutarComando(entrada, salida, comando, UNILINE);
+                if (respuesta.indexOf("+OK") == -1) {
+                    return null;
+                }
+                comando = "PASS " + Contraseña + "\r\n";
+                respuesta = ejecutarComando(entrada, salida, comando, BILINE);
+                if (respuesta.indexOf("+OK") == -1) {
+                    return null;
+                }
+                comando = "LIST \r\n";
+                respuesta = ejecutarComando(entrada, salida, comando, MULTILINE);
+
+                if (getNumeroMensajes(respuesta) > 0) {
+                    int idmensaje = getIdPrimerMensaje(respuesta);
+                    comando = "RETR " + idmensaje + "\n";
+                    String data = ejecutarComandoSubject(entrada, salida, comando, MULTILINE);
+                    if (data.indexOf("+OK") != -1) {
+                        String correo = getCorreoUser(data);
+                        String subject = getSubject(data);
+                        String mensaje = getSubject(data);
+                        msj = new Mensaje(idmensaje, correo, subject, mensaje);
+                    }
+                }
+                comando = "QUIT\r\n";
+                salida.writeBytes(comando);
+            }
+            salida.close();
+            entrada.close();
+            socket.close();
+        } catch (UnknownHostException e) {
+            System.out.println(e.getMessage());
+            System.out.println(" S : no se pudo conectar con el servidor indicado");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return msj;
+    }
+
     private String getSubject(String entrada) {  /////seguimos parcheando el codigo
         String aux = entrada.toUpperCase();
         //  System.out.println("S : getSubject\n");
@@ -32,7 +80,7 @@ public class ClientePOP {
 
         String cadenita = entrada.substring(pos, fin - 1).trim();
         //cadenita.replaceAll("\n", " ");
-        System.out.println(cadenita);
+        //System.out.println(cadenita);
         return cadenita;
     }
 
@@ -138,62 +186,6 @@ public class ClientePOP {
             e.printStackTrace();
         }
         return "";
-    }
-
-    public Mensaje LeerCorreo() {
-        Mensaje msj = null;
-        try {
-            //  System.out.println(" S : Leyendo correo");
-            String comando = "";
-            Socket socket = new Socket(Servidor, Puerto);
-            BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
-            String respuesta = "";
-            if (socket != null && entrada != null && salida != null) {
-                //System.out.println("S : "+entrada.readLine()+"\r\n");
-                comando = "USER " + Usuario + "\r\n";
-                respuesta = ejecutarComando(entrada, salida, comando, UNILINE);
-                if (respuesta.indexOf("+OK") == -1) {
-                    return null;
-                }
-
-                comando = "PASS " + Contraseña + "\r\n";
-                respuesta = ejecutarComando(entrada, salida, comando, BILINE);
-                if (respuesta.indexOf("+OK") == -1) {
-                    return null;
-                }
-
-                comando = "LIST \r\n";
-                respuesta = ejecutarComando(entrada, salida, comando, MULTILINE);
-
-                if (getNumeroMensajes(respuesta) > 0) {
-                    int idmensaje = getIdPrimerMensaje(respuesta);
-                    comando = "RETR " + idmensaje + "\n";
-                    String data = ejecutarComandoSubject(entrada, salida, comando, MULTILINE);
-                    System.out.println("esta es a respuesta de =>>> " + data);
-                    if (data.indexOf("+OK") != -1) {
-                        String correo = getCorreoUser(data);
-                        String subject = getSubject(data);
-                        String mensaje = getSubject(data);
-                        msj = new Mensaje(idmensaje, correo, subject, mensaje);
-
-                    }
-                }
-                comando = "QUIT\r\n";
-                salida.writeBytes(comando);
-            }
-            salida.close();
-            entrada.close();
-            socket.close();
-        } catch (UnknownHostException e) {
-            System.out.println(e.getMessage());
-            System.out.println(" S : no se pudo conectar con el servidor indicado");
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return msj;
     }
 
     public boolean eliminarCorreo(int idmensaje) {

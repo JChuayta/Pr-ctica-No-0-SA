@@ -1,6 +1,6 @@
 package Servicio;
 
-import Negocio.NUsuario;
+import Negocio.NAmigo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
@@ -16,7 +16,7 @@ public class Esclavo {
         temporizador = new Timer();
         planificar();
     }
-    
+ 
     private void planificar() {
         if (temporizador != null) {
             Date timeToRun = new Date(System.currentTimeMillis() + milisegundosDeRetraso);
@@ -27,7 +27,6 @@ public class Esclavo {
             }, timeToRun);
         }
     }
-
     /*Este metodo verificara cada rato el servidor
      */
     private synchronized void verificarBandeja() {
@@ -40,7 +39,7 @@ public class Esclavo {
             String contenidoMensaje = mensaje.getSubject(); /// este es el parametro de entrada para nuestra funcion de consulta
 
             if (contenidoMensaje != "") {
-                NUsuario user = new NUsuario(contenidoMensaje);
+                NAmigo user = new NAmigo(contenidoMensaje);
                 user.analizar(mensaje);
             }
             
