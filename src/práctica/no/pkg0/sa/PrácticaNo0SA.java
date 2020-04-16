@@ -24,11 +24,11 @@ public class PrácticaNo0SA {
          Esclavo esclavo;
         Connection con = Conexion.getInstance().getConnection();
         if (con != null) {
-            System.out.println("true");;
+            System.out.println(" ¡¡¡ Conexion exitosa !!!");;
             esclavo = new Esclavo();
             esclavo.start();
         } else {
-            System.out.println("false");
+            System.out.println("Fallo en la Conexion");
         }
     }
     
