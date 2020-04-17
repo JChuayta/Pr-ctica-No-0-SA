@@ -17,11 +17,11 @@ public class Conexion {
 
     private static Conexion instance = null;
 
-    private final String db_name = "db_grupo08sc";
+    private final String db_name = "db_agenda";
     private final String port = "5432";
     private final String host = "virtual.fcet.uagrm.edu.bo";
-    private final String usuario = "grupo08sc";
-    private final String password = "grupo08grupo08";
+    private final String usuario = "agenda";
+    private final String password = "agendaagenda";
 
     private Connection conn;
     private Conexion() {

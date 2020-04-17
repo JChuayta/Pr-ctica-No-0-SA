@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.TimeoutException;
 
- public class ClientePOP {
+public class ClientePOP {
 
     private static int UNILINE = 0;
     private static int BILINE = 1;
@@ -40,6 +40,7 @@ import java.util.concurrent.TimeoutException;
                     int idmensaje = getIdPrimerMensaje(respuesta);
                     comando = "RETR " + idmensaje + "\n";
                     String data = ejecutarComandoSubject(entrada, salida, comando, MULTILINE);
+                    //System.out.println("la data =>>>" + data);
                     if (data.indexOf("+OK") != -1) {
                         String correo = getCorreoUser(data);
                         String subject = getSubject(data);
@@ -67,8 +68,8 @@ import java.util.concurrent.TimeoutException;
     private String getSubject(String entrada) {  /////seguimos parcheando el codigo
         String aux = entrada.toUpperCase();
         //  System.out.println("S : getSubject\n");
-        int pos = aux.indexOf("SUBJECT: ") + 8;
 
+        int pos = aux.indexOf("SUBJECT: ") + 8;
         int fin = 0;
         if (entrada.contains("@outlook.com") || entrada.contains("@hotmail.com")) {
             fin = entrada.indexOf("Thread-Topic:", pos);
