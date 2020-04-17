@@ -10,8 +10,8 @@ public class ClientePOP {
     private static int BILINE = 1;
     private static int MULTILINE = 2;
     private static String Servidor = "virtual.fcet.uagrm.edu.bo";
-    private static String Usuario = "grupo08sc";
-    private static String Contraseña = "grupo08grupo08";
+    private static String Usuario = "grupo10sc";
+    private static String Contraseña = "grupo10grupo10";
     private int Puerto = 110;
 
     public Mensaje LeerCorreo() {
@@ -40,7 +40,7 @@ public class ClientePOP {
                     int idmensaje = getIdPrimerMensaje(respuesta);
                     comando = "RETR " + idmensaje + "\n";
                     String data = ejecutarComandoSubject(entrada, salida, comando, MULTILINE);
-                    //System.out.println("la data =>>>" + data);
+                    System.out.println("la data =>>>" + data);
                     if (data.indexOf("+OK") != -1) {
                         String correo = getCorreoUser(data);
                         String subject = getSubject(data);
@@ -78,8 +78,9 @@ public class ClientePOP {
         } else {
             fin = entrada.indexOf("Content-Type:", pos);
         }
-
-        String cadenita = entrada.substring(pos, fin - 1).trim();
+        
+        String cadenita = entrada.substring(pos, fin -1).trim();
+   
         //cadenita.replaceAll("\n", " ");
         //System.out.println(cadenita);
         return cadenita;
